@@ -14,27 +14,40 @@
 返回  值：无
 作    者：平衡小车之家
 **************************************************************************/
-int Balance_Pwm,Velocity_Pwm,Turn_Pwm;
-void TIM1_UP_TIM16_IRQHandler(void)  
-{
-	if(TIM1->SR&0X0001)//5ms定时中断
-	{   
-		  TIM1->SR&=~(1<<0);                                       //===清除定时器1中断标志位		 
-			readEncoder();                                           //===读取编码器的值
-  		Led_Flash(20);	                                          //===LED闪烁
-  		Get_battery_volt();                                      //===获取电池电压	          
-			key(100);                                                //===扫描按键状态
-		  Get_Angle(Way_Angle);                                    //===更新姿态	
- 			Balance_Pwm =balance(Angle_Balance,Gyro_Balance);        //===平衡PID控制	
- 			Velocity_Pwm=velocity(Encoder_Left,Encoder_Right);       //===速度环PID控制
- 	    Turn_Pwm    =turn(Encoder_Left,Encoder_Right,Gyro_Turn); //===转向环PID控制     
- 		  Moto1=Balance_Pwm+Velocity_Pwm-Turn_Pwm;                 //===计算左轮电机最终PWM
- 	  	Moto2=Balance_Pwm+Velocity_Pwm+Turn_Pwm;                 //===计算右轮电机最终PWM
-   		Xianfu_Pwm();                                            //===PWM限幅
-      if(Turn_Off(Angle_Balance,Voltage)==0)                   //===如果不存在异常
- 			Set_Pwm(Moto1,Moto2);                                    //===赋值给PWM寄存器    		
-	}
-} 
+int Balance_Pwm, Velocity_Pwm, Turn_Pwm;
+void TIM1_UP_TIM16_IRQHandler(void) {
+  if (TIM1->SR & 0X0001)  // 5ms定时中断
+  {
+    TIM1->SR &= ~(1 << 0);  //===清除定时器1中断标志位
+    readEncoder();          //===读取编码器的值
+    Led_Flash(20);          //===LED闪烁
+    Get_battery_volt();     //===获取电池电压
+    // key(100); //===扫描按键状态 
+	// Get_Angle(Way_Angle); //===更新姿态
+
+	Moto1 = pid_velocity();
+    Xianfu_Pwm();
+    //if (!Turn_Off(0, Voltage)) {
+    Set_Pwm(Moto1, 0);
+    //}
+  }
+}
+
+int pid_velocity(void) {
+  static int Integral = 0;
+  static int LastError = 0;
+	int velocity = 0;
+
+  int ErrorL = ((int)Desire1 - Encoder_Left);
+  Integral += ErrorL;
+  velocity = velocity_kp * ErrorL + velocity_ki * Integral  + velocity_kd * (ErrorL - LastError);
+
+  LastError = ErrorL;
+  if (Integral > 360000) Integral = 360000;
+  if (Integral < -360000) Integral = -360000;
+
+  return velocity;
+}
 
 /**************************************************************************
 函数功能：直立PD控制

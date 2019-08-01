@@ -8,6 +8,7 @@
 **************************************************************************/
 extern	int Balance_Pwm,Velocity_Pwm,Turn_Pwm;
 void TIM1_UP_TIM16_IRQHandler(void);  
+int pid_velocity(void);
 int balance(float angle,float gyro);
 int velocity(int encoder_left,int encoder_right);
 int turn(int encoder_left,int encoder_right,float gyro);

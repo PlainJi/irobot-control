@@ -92,26 +92,21 @@ void oled_show(void)
 **************************************************************************/
 void DataScope(void)
 {   
-	  if(++Count==1)
-		{	
-		OLED_Clear();  
-		OLED_Display_Off();		
-		}	
-		DataScope_Get_Channel_Data( Angle_Balance, 1 );
-		DataScope_Get_Channel_Data( Encoder_Right, 2 );
-		DataScope_Get_Channel_Data( Encoder_Left, 3 ); 
-		DataScope_Get_Channel_Data( Voltage , 4 );   
-		DataScope_Get_Channel_Data(0, 5 ); //用您要显示的数据替换0就行了
-		DataScope_Get_Channel_Data(0 , 6 );//用您要显示的数据替换0就行了
-		DataScope_Get_Channel_Data(0, 7 );
-		DataScope_Get_Channel_Data( 0, 8 ); 
-		DataScope_Get_Channel_Data(0, 9 );  
-		DataScope_Get_Channel_Data( 0 , 10);
-		Send_Count = DataScope_Data_Generate(10);
-		for( i = 0 ; i < Send_Count; i++) 
-		{
+	DataScope_Get_Channel_Data( (float)Desire1, 1 );
+	DataScope_Get_Channel_Data( (float)Encoder_Left, 2 );
+	DataScope_Get_Channel_Data( (float)Moto1, 3 ); 
+	DataScope_Get_Channel_Data( (float)Voltage , 4 );
+	DataScope_Get_Channel_Data(0, 5 ); //用您要显示的数据替换0就行了
+	DataScope_Get_Channel_Data(0 , 6 );//用您要显示的数据替换0就行了
+	DataScope_Get_Channel_Data(0, 7 );
+	DataScope_Get_Channel_Data( 0, 8 ); 
+	DataScope_Get_Channel_Data(0, 9 );  
+	DataScope_Get_Channel_Data( 0 , 10);
+	Send_Count = DataScope_Data_Generate(4);
+	for( i = 0 ; i < Send_Count; i++) 
+	{
 		while((USART1->SR&0X40)==0);  
 		USART1->DR = DataScope_OutPut_Buffer[i]; 
-		}
-		delay_ms(50); //20HZ
+	}
+	delay_ms(50); //20HZ
 }

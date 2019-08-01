@@ -19,6 +19,7 @@
 extern u8 Way_Angle;                             //»ñÈ¡½Ç¶ÈµÄËã·¨£¬1£ºËÄÔªÊı  2£º¿¨¶ûÂü  3£º»¥²¹ÂË²¨
 extern int Encoder_Left,Encoder_Right;             //×óÓÒ±àÂëÆ÷µÄÂö³å¼ÆÊı
 extern int Moto1,Moto2;                            //µç»úPWM±äÁ¿ Ó¦ÊÇmotorµÄ ÏòmotoÖÂ¾´	
+extern int Desire1, Desire2;
 extern u8 Flag_Qian,Flag_Hou,Flag_Left,Flag_Right; //À¶ÑÀÒ£¿ØÏà¹ØµÄ±äÁ¿
 extern u8 Flag_Stop,Flag_Show;                 //Í£Ö¹±êÖ¾Î»ºÍ ÏÔÊ¾±êÖ¾Î» Ä¬ÈÏÍ£Ö¹ ÏÔÊ¾´ò¿ª
 extern int Voltage,Voltage_Zheng,Voltage_Xiao;//µç³ØµçÑ¹²ÉÑùÏà¹ØµÄ±äÁ¿
@@ -26,7 +27,7 @@ extern float Angle_Balance,Gyro_Balance,Gyro_Turn; //Æ½ºâÇã½Ç Æ½ºâÍÓÂİÒÇ ×ªÏòÍÓÂ
 extern float Show_Data_Mb;                         //È«¾ÖÏÔÊ¾±äÁ¿£¬ÓÃÓÚÏÔÊ¾ĞèÒª²é¿´µÄÊı¾İ
 extern int Temperature;
 extern float balance_kp, balance_kd;
-extern float velocity_kp, velocity_ki;
+extern float velocity_kp, velocity_ki, velocity_kd;
 extern float turn_kp, turn_kd;
 extern int vol;
 extern int turn_vol;

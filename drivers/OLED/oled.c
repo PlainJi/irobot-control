@@ -37,7 +37,8 @@ void OLED_Refresh_Gram(void)
 		OLED_WR_Byte (0xb0+i,OLED_CMD);    //设置页地址（0~7）
 		OLED_WR_Byte (0x00,OLED_CMD);      //设置显示位置—列低地址
 		OLED_WR_Byte (0x10,OLED_CMD);      //设置显示位置—列高地址   
-		for(n=0;n<128;n++)OLED_WR_Byte(OLED_GRAM[n][i],OLED_DATA); 
+		for(n=0;n<128;n++)
+			OLED_WR_Byte(OLED_GRAM[n][i],OLED_DATA); 
 	}   
 }
 #if OLED_MODE==1

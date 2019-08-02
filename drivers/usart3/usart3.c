@@ -84,6 +84,8 @@ void USART3_IRQHandler(void)
 					velocity_kp = value;
 				else if (!strncmp((const char*)(mode_data+2), "VI", 2))				// Ki of velocity
 					velocity_ki = value;
+				else if (!strncmp((const char*)(mode_data+2), "VD", 2))				// Ki of velocity
+					velocity_kd = value;
 				else if (!strncmp((const char*)(mode_data+2), "VV", 2))				// velocity
 					vol = (int)value;
 				else if (!strncmp((const char*)(mode_data+2), "TP", 2))				// Kp of turn

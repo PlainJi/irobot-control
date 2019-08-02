@@ -8,13 +8,13 @@ u8 Flag_Qian,Flag_Hou,Flag_Left,Flag_Right; //蓝牙遥控相关的变量
 u8 Flag_Stop=1,Flag_Show=1;                 //停止标志位和 显示标志位 默认停止 显示打开
 int Encoder_Left,Encoder_Right;             //左右编码器的脉冲计数
 int Moto1,Moto2;                            //电机PWM变量 应是Motor的 向Moto致敬	
-int Desire1=60, Desire2=0;
+int Desire1=150, Desire2=0;
 int Temperature;                            //显示温度
 int Voltage;                                //电池电压采样相关的变量
 float Angle_Balance,Gyro_Balance,Gyro_Turn; //平衡倾角 平衡陀螺仪 转向陀螺仪
 float Show_Data_Mb;                         //全局显示变量，用于显示需要查看的数据
 float balance_kp=60.0, balance_kd=0.18;
-float velocity_kp=24.0, velocity_ki=0.007, velocity_kd = 0.0;
+float velocity_kp=7.0, velocity_ki=2, velocity_kd = 0;
 float turn_kp=2.0, turn_kd=0.083;
 int vol = 500;
 int turn_vol = 1;

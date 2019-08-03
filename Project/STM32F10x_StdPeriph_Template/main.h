@@ -17,11 +17,17 @@
 #include "adc.h"
 #include "DataScope_DP.h"
 
-extern int Encoder_Left,Encoder_Right;
-extern int MotoL,MotoR;
-extern char Stop;
-extern int DesireL, DesireR;
 extern float velocity_kp, velocity_ki, velocity_kd;
+extern int MotoL,MotoR;
+extern int Encoder_Left,Encoder_Right;
+extern float DesireL, DesireR;
+extern char Stop;
+extern float DesireVelocity;
+extern float DesireAngVelo;
+#define Wheelbase   (0.15)                      //轮距 m
+#define Perimeter   (0.206f)			        //轮子周长 m
+#define Unit        (512*27/Perimeter)	        //每米对应的编码器脉冲数
+#define SampleTime  (0.005f)			        //编码器采样周期 5ms
 
 extern int Voltage;
 extern int Temperature;

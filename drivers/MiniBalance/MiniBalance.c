@@ -15,8 +15,8 @@ void TIM1_UP_TIM16_IRQHandler(void) {
     // key(100);            //===扫描按键状态
     // Get_Angle(Way_Angle); //===更新姿态
 
-    // pid_velocity_weizhi();
-    pid_velocity_zengliang();
+    pid_velocity_weizhi();
+    //pid_velocity_zengliang();
     Xianfu_Pwm();
     Set_Pwm(MotoL, MotoR);
   }
@@ -25,9 +25,18 @@ void TIM1_UP_TIM16_IRQHandler(void) {
 void pid_velocity_weizhi(void) {
   static int IntegralL = 0, IntegralR = 0;
   static int LastErrorL = 0, LastErrorR = 0;
+  int ErrorL = 0, ErrorR = 0;
+  float DiffDis = 0;
 
-  int ErrorL = ((int)DesireL - Encoder_Left);
-  int ErrorR = ((int)DesireR - Encoder_Right);
+  // 速度
+  DesireL = DesireVelocity * SampleTime * Unit;
+  DesireR = DesireVelocity * SampleTime * Unit;
+  // 角速度 deg/s
+  DiffDis = (DesireAngVelo * SampleTime / 2.0 / 180 * PI) * Wheelbase / 2.0 * Unit;
+  DesireL -= DiffDis;
+  DesireR += DiffDis;
+  ErrorL = ((int)DesireL - Encoder_Left);
+  ErrorR = ((int)DesireR - Encoder_Right);
   if (Stop) {
     MotoL = 0, MotoR = 0;
     IntegralL = 0, IntegralR = 0;
@@ -53,6 +62,8 @@ void pid_velocity_zengliang(void) {
   static int LastErrorL = 0, LastErrorR = 0;
   int ErrorL = 0, ErrorR = 0;
 
+  DesireL = DesireVelocity * SampleTime * Unit;
+  DesireR = DesireVelocity * SampleTime * Unit;
   ErrorL = ((int)DesireL - Encoder_Left);
   ErrorR = ((int)DesireR - Encoder_Right);
   if (Stop) {

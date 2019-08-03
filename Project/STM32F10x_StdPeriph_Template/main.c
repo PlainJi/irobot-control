@@ -1,13 +1,16 @@
 #include "main.h"
 
-int Encoder_Left,Encoder_Right;             //左右编码器的脉冲计数
-int MotoL=0, MotoR=0;                            //电机PWM变量 应是Motor的 向Moto致敬	
-int DesireL=20, DesireR=20;
-char Stop = 0;
-int Temperature;                            //显示温度
-int Voltage;                                //电池电压采样相关的变量
-float Angle_Balance,Gyro_Balance,Gyro_Turn; //平衡倾角 平衡陀螺仪 转向陀螺仪
+int MotoL=0, MotoR=0;				//电机PWM变量
+int Encoder_Left,Encoder_Right;		//左右编码器的脉冲计数
+float DesireL= 0, DesireR = 0;		//期望的脉冲计数
+char Stop = 0;						//启动/停止
+int Temperature;					//显示温度
+int Voltage;						//电池电压采样相关的变量
 float velocity_kp=7, velocity_ki=2, velocity_kd = 0;
+float Angle_Balance,Gyro_Balance,Gyro_Turn; //平衡倾角 平衡陀螺仪 转向陀螺仪
+/***********************************************/
+float DesireVelocity = 0.0;			//期望速度 m/s
+float DesireAngVelo = 10;			//期望的角速度 deg/s
 
 int main(void)
 {
@@ -36,4 +39,3 @@ int main(void)
 		delay_ms(20);
 	}	
 }
-

@@ -59,29 +59,21 @@ void USART3_IRQHandler(void) {
       //     Flag_Stop = !Flag_Stop;  //Í£Ö¹Êä³ö¿ØÖÆ
       else if (mode_data[1] == 'S') {
         static float value = 0.0;
-        value =
-            (float)((mode_data[5] - '0') * 100000 +
-                    (mode_data[6] - '0') * 10000 + (mode_data[7] - '0') * 1000 +
-                    (mode_data[8] - '0') * 100 + (mode_data[9] - '0') * 10 +
-                    (mode_data[10] - '0')) /
-            1000.0;
+        value = (float)((mode_data[5] - '0') * 100000 + (mode_data[6] - '0') * 10000 + (mode_data[7] - '0') * 1000 +
+                        (mode_data[8] - '0') * 100 + (mode_data[9] - '0') * 10 + (mode_data[10] - '0')) / 1000.0;
         if (mode_data[4] == '-') {
           value = -value;
         }
-        if (!strncmp((const char*)(mode_data + 2), "VP", 2))  // Kp of velocity
+        if (!strncmp((const char*)(mode_data + 2), "VP", 2))
           velocity_kp = value;
-        else if (!strncmp((const char*)(mode_data + 2), "VI",
-                          2))  // Ki of velocity
+        else if (!strncmp((const char*)(mode_data + 2), "VI", 2)) 
           velocity_ki = value;
-        else if (!strncmp((const char*)(mode_data + 2), "VD",
-                          2))  // Kd of velocity
+        else if (!strncmp((const char*)(mode_data + 2), "VD", 2))
           velocity_kd = value;
-        else if (!strncmp((const char*)(mode_data + 2), "DL",
-                          2))  // desire speed of left
-          DesireL = (int)value;
-        else if (!strncmp((const char*)(mode_data + 2), "DR",
-                          2))  // desire speed of left
-          DesireR = (int)value;
+        else if (!strncmp((const char*)(mode_data + 2), "DV", 2))
+          DesireVelocity = value;
+        else if (!strncmp((const char*)(mode_data + 2), "DA", 2))
+          DesireAngVelo = value;
       }
     }
   }

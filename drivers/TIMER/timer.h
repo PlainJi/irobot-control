@@ -1,10 +1,8 @@
 #ifndef __TIMER_H
 #define __TIMER_H
+
 #include <main.h>	 
-/**************************************************************************
-作者：平衡小车之家 
-淘宝店铺：http://shop114407458.taobao.com/
-**************************************************************************/
+
 #define WWDG_IRQChannel              ((u8)0x00)  /* Window WatchDog Interrupt */
 #define PVD_IRQChannel               ((u8)0x01)  /* PVD through EXTI Line detection Interrupt */
 #define TAMPER_IRQChannel            ((u8)0x02)  /* Tamper Interrupt */
@@ -65,10 +63,7 @@
 #define DMA2_Channel2_IRQChannel     ((u8)0x39)  /* DMA2 Channel 2 global Interrupt */
 #define DMA2_Channel3_IRQChannel     ((u8)0x3A)  /* DMA2 Channel 3 global Interrupt */
 #define DMA2_Channel4_5_IRQChannel   ((u8)0x3B)  /* DMA2 Channel 4 and DMA2 Channel 5 global Interrupt */
-/**************************************************************************
-作者：平衡小车之家 
-淘宝店铺：http://shop114407458.taobao.com/
-**************************************************************************/
+
 #define ENCODER_TIM_PERIOD (u16)(65000)   // number of pulses per revolution
 #define COUNTER_RESET   (u16)0
 
@@ -78,8 +73,6 @@
 #define BIN1   PBout(13)
 #define BIN2   PBout(12)
 #define PWMB   TIM3->CCR3
-
- 
 
 extern u8  TIM2CH1_CAPTURE_STA;	//输入捕获状态		    				
 extern u16	TIM2CH1_CAPTURE_VAL;	//输入捕获值
@@ -91,8 +84,6 @@ void Encoder_Init2(void);
 void Timer1_Init(u16 arr,u16 psc);  
 void MiniBalance_PWM_Init(u16 arr,u16 psc);
 void MY_NVIC_Init(u8 NVIC_PreemptionPriority,u8 NVIC_SubPriority,u8 NVIC_Channel,u8 NVIC_Group);	 
-
-void MY_NVIC_PriorityGroupConfig(u8 NVIC_Group);	 
-
+void MY_NVIC_PriorityGroupConfig(u8 NVIC_Group);
 
 #endif

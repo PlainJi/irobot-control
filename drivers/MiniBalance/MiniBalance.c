@@ -12,10 +12,10 @@ void TIM1_UP_TIM16_IRQHandler(void) {
     readEncoder();          //===¶ÁÈ¡±àÂëÆ÷µÄÖµ
     Led_Flash(20);          //===LEDÉÁË¸
     Get_battery_volt();     //===»ñÈ¡µç³ØµçÑ¹
-    // key(100); 			//===É¨Ãè°´¼ü×´Ì¬
+    // key(100);            //===É¨Ãè°´¼ü×´Ì¬
     // Get_Angle(Way_Angle); //===¸üÐÂ×ËÌ¬
 
-    //pid_velocity_weizhi();
+    // pid_velocity_weizhi();
     pid_velocity_zengliang();
     Xianfu_Pwm();
     Set_Pwm(MotoL, MotoR);
@@ -30,14 +30,14 @@ void pid_velocity_weizhi(void) {
   int ErrorR = ((int)DesireR - Encoder_Right);
   if (Stop) {
     MotoL = 0, MotoR = 0;
-	  IntegralL = 0, IntegralR = 0;
+    IntegralL = 0, IntegralR = 0;
   } else {
-	  IntegralL += ErrorL;
+    IntegralL += ErrorL;
     IntegralR += ErrorR;
     MotoL = velocity_kp * ErrorL + velocity_ki * IntegralL +
-          velocity_kd * (ErrorL - LastErrorL);
+            velocity_kd * (ErrorL - LastErrorL);
     MotoR = velocity_kp * ErrorR + velocity_ki * IntegralR +
-          velocity_kd * (ErrorR - LastErrorR);
+            velocity_kd * (ErrorR - LastErrorR);
   }
 
   LastErrorL = ErrorL;
@@ -58,8 +58,10 @@ void pid_velocity_zengliang(void) {
   if (Stop) {
     MotoL = 0, MotoR = 0;
   } else {
-    MotoL += velocity_kp*(ErrorL-LastErrorL) + velocity_ki*ErrorL + velocity_kd*(ErrorL-2*LastErrorL+PreErrorL);
-    MotoR += velocity_kp*(ErrorR-LastErrorR) + velocity_ki*ErrorR + velocity_kd*(ErrorR-2*LastErrorR+PreErrorR);
+    MotoL += velocity_kp * (ErrorL - LastErrorL) + velocity_ki * ErrorL +
+             velocity_kd * (ErrorL - 2 * LastErrorL + PreErrorL);
+    MotoR += velocity_kp * (ErrorR - LastErrorR) + velocity_ki * ErrorR +
+             velocity_kd * (ErrorR - 2 * LastErrorR + PreErrorR);
   }
 
   PreErrorL = LastErrorL;

@@ -30,53 +30,57 @@ void uart3_init(u32 pclk2, u32 bound) {
 
 void USART3_IRQHandler(void) {
   static u8 mode_data[13] = "$SVP0000000#";
-  static u8 p_w = 0;	//当前字节存储位置
+  static u8 p_w = 0;  //当前字节存储位置
   char uart_receive = 0;
 
   if (USART3->SR & (1 << 5))  //接收到数据
-  {    
+  {
     uart_receive = USART3->DR;
-    if (uart_receive == '$')
-		p_w = 0;
-    if (p_w == sizeof(mode_data))
-		p_w = 0;
+    if (uart_receive == '$') p_w = 0;
+    if (p_w == sizeof(mode_data)) p_w = 0;
     mode_data[p_w++] = uart_receive;
 
     if (uart_receive == '#' && mode_data[0] == '$') {
       if (!strncmp((const char*)(mode_data + 1), "C5", 2))
         Stop = 1;  //刹车
-	  else if (!strncmp((const char*)(mode_data + 1), "C2", 2))
+      else if (!strncmp((const char*)(mode_data + 1), "C2", 2))
         Stop = 0;
-    //   else if (!strncmp((const char*)(mode_data + 1), "C2", 2))
-    //     Flag_Qian = 1, Flag_Hou = 0, Flag_Left = 0, Flag_Right = 0;  //前
-    //   else if (!strncmp((const char*)(mode_data + 1), "C8", 2))
-    //     Flag_Qian = 0, Flag_Hou = 1, Flag_Left = 0, Flag_Right = 0;  //后
-    //   else if (!strncmp((const char*)(mode_data + 1), "C4", 2))
-    //     Flag_Qian = 0, Flag_Hou = 0, Flag_Left = 1, Flag_Right = 0;  //左
-    //   else if (!strncmp((const char*)(mode_data + 1), "C6", 2))
-    //     Flag_Qian = 0, Flag_Hou = 0, Flag_Left = 0, Flag_Right = 1;  //右
-    //   else if (!strncmp((const char*)(mode_data + 1), "CL", 2))
-    //     Flag_Show ^= 1;  //开关OLED显示
-    //   else if (!strncmp((const char*)(mode_data + 1), "CS", 2))
-    //     Flag_Stop = !Flag_Stop;  //停止输出控制
+      //   else if (!strncmp((const char*)(mode_data + 1), "C2", 2))
+      //     Flag_Qian = 1, Flag_Hou = 0, Flag_Left = 0, Flag_Right = 0;  //前
+      //   else if (!strncmp((const char*)(mode_data + 1), "C8", 2))
+      //     Flag_Qian = 0, Flag_Hou = 1, Flag_Left = 0, Flag_Right = 0;  //后
+      //   else if (!strncmp((const char*)(mode_data + 1), "C4", 2))
+      //     Flag_Qian = 0, Flag_Hou = 0, Flag_Left = 1, Flag_Right = 0;  //左
+      //   else if (!strncmp((const char*)(mode_data + 1), "C6", 2))
+      //     Flag_Qian = 0, Flag_Hou = 0, Flag_Left = 0, Flag_Right = 1;  //右
+      //   else if (!strncmp((const char*)(mode_data + 1), "CL", 2))
+      //     Flag_Show ^= 1;  //开关OLED显示
+      //   else if (!strncmp((const char*)(mode_data + 1), "CS", 2))
+      //     Flag_Stop = !Flag_Stop;  //停止输出控制
       else if (mode_data[1] == 'S') {
         static float value = 0.0;
         value =
-            (float)((mode_data[5] - '0') * 100000 + (mode_data[6] - '0') * 10000 + 
-										(mode_data[7] - '0') * 1000 + (mode_data[8] - '0') * 100 + 
-										(mode_data[9] - '0') * 10 + (mode_data[10] - '0'))/ 1000.0;
-				if (mode_data[4] == '-') {
-					value = -value;
-				}
+            (float)((mode_data[5] - '0') * 100000 +
+                    (mode_data[6] - '0') * 10000 + (mode_data[7] - '0') * 1000 +
+                    (mode_data[8] - '0') * 100 + (mode_data[9] - '0') * 10 +
+                    (mode_data[10] - '0')) /
+            1000.0;
+        if (mode_data[4] == '-') {
+          value = -value;
+        }
         if (!strncmp((const char*)(mode_data + 2), "VP", 2))  // Kp of velocity
           velocity_kp = value;
-        else if (!strncmp((const char*)(mode_data + 2), "VI", 2))  // Ki of velocity
+        else if (!strncmp((const char*)(mode_data + 2), "VI",
+                          2))  // Ki of velocity
           velocity_ki = value;
-        else if (!strncmp((const char*)(mode_data + 2), "VD", 2))  // Kd of velocity
+        else if (!strncmp((const char*)(mode_data + 2), "VD",
+                          2))  // Kd of velocity
           velocity_kd = value;
-        else if (!strncmp((const char*)(mode_data + 2), "DL", 2))  // desire speed of left
+        else if (!strncmp((const char*)(mode_data + 2), "DL",
+                          2))  // desire speed of left
           DesireL = (int)value;
-		else if (!strncmp((const char*)(mode_data + 2), "DR", 2))  // desire speed of left
+        else if (!strncmp((const char*)(mode_data + 2), "DR",
+                          2))  // desire speed of left
           DesireR = (int)value;
       }
     }

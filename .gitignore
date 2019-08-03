@@ -1,3 +1,5 @@
 .vscode
-HEX_OUTPUT
+HEX_OUTPUT/*.[od]
+HEX_OUTPUT/*.crf
+HEX_OUTPUT/*.dep
 Project/STM32F10x_StdPeriph_Template/MDK-ARM/STM32100E-EVAL/STM32100E-EVAL.map

@@ -1,9 +1,6 @@
 #ifndef __USRAT3_H
 #define __USRAT3_H 
-/**************************************************************************
-作者：平衡小车之家 
-淘宝店铺：http://shop114407458.taobao.com/
-**************************************************************************/
+
 #include "main.h"
 #define GPIO_CR_RESET                 (uint32_t)0x44444444 
 #define GPIO_CR_MODE_INPUT            (uint32_t)0x00000000
@@ -29,10 +26,6 @@
 #define USART_CR2_REST                (uint32_t)0x00000000
 #define USART_CR3_REST                (uint32_t)0x00000000
 
-
-	  	
-extern u8 USART_RX_BUF[64];     //接收缓冲,最大63个字节.末字节为换行符 
-extern u8 USART_RX_STA;         //接收状态标记	
 extern u8 mode_data[13];
 
 //如果想串口中断接收，请不要注释以下宏定义

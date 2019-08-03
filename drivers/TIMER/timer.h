@@ -83,7 +83,6 @@
 
 extern u8  TIM2CH1_CAPTURE_STA;	//输入捕获状态		    				
 extern u16	TIM2CH1_CAPTURE_VAL;	//输入捕获值
-int myabs(int a);
 void Timerx_Init(u16 arr,u16 psc);
 void TIM4_IRQHandler(void);
 void Encoder_Init(void);

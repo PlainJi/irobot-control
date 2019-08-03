@@ -1,11 +1,8 @@
  
+#include <string.h>
 #include "DataScope_DP.h"
- /**************************************************************************
-作者：平衡小车之家 
-淘宝店铺：http://shop114407458.taobao.com/
-**************************************************************************/
-unsigned char DataScope_OutPut_Buffer[42] = {0};	   //串口发送缓冲区
 
+unsigned char DataScope_OutPut_Buffer[42] = {0};	   //串口发送缓冲区
 
 //函数说明：将单精度浮点数据转成4字节数据并存入指定地址 
 //附加说明：用户无需直接操作此函数 
@@ -30,6 +27,13 @@ void Float2Byte(float *target,unsigned char *buf,unsigned char beg)
 //函数无返回 
 void DataScope_Get_Channel_Data(float Data,unsigned char Channel)
 {
+	if ((Channel > 10) || (Channel == 0))
+		return;
+	else {
+		memcpy(DataScope_OutPut_Buffer+1+(Channel-1)*4, &Data, 4);
+	}
+
+/*
 	if ( (Channel > 10) || (Channel == 0) ) return;  //通道个数大于10或等于0，直接跳出，不执行函数
   else
   {
@@ -47,6 +51,7 @@ void DataScope_Get_Channel_Data(float Data,unsigned char Channel)
 		  case 10: Float2Byte(&Data,DataScope_OutPut_Buffer,37); break;
 		}
   }	 
+*/
 }
 
 
@@ -56,6 +61,15 @@ void DataScope_Get_Channel_Data(float Data,unsigned char Channel)
 //返回0表示帧格式生成失败 
 unsigned char DataScope_Data_Generate(unsigned char Channel_Number)
 {
+	char offset = 1+Channel_Number*4;
+	if ( (Channel_Number > 10) || (Channel_Number == 0) ) {
+		return 0;
+	} else {
+		DataScope_OutPut_Buffer[0] = '$';  //帧头
+		DataScope_OutPut_Buffer[offset]  = offset;
+	}
+	return (offset+1);
+/*
 	if ( (Channel_Number > 10) || (Channel_Number == 0) ) { return 0; }  //通道个数大于10或等于0，直接跳出，不执行函数
   else
   {	
@@ -76,6 +90,7 @@ unsigned char DataScope_Data_Generate(unsigned char Channel_Number)
    }	 
   }
 	return 0;
+*/
 }
 
 

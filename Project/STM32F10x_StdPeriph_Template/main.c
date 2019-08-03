@@ -9,8 +9,8 @@ int Voltage;						//电池电压采样相关的变量
 float velocity_kp=7, velocity_ki=2, velocity_kd = 0;
 float Angle_Balance,Gyro_Balance,Gyro_Turn; //平衡倾角 平衡陀螺仪 转向陀螺仪
 /***********************************************/
-float DesireVelocity = 0.0;			//期望速度 m/s
-float DesireAngVelo = 10;			//期望的角速度 deg/s
+float DesireVelocity = 0.2;			//期望速度 m/s
+float DesireAngVelo = 3.14*20/180;	//期望的角速度 rad/s
 
 int main(void)
 {

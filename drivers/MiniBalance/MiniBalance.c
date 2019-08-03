@@ -1,23 +1,24 @@
 #include "MiniBalance.h"
 #include "led.h"
-#include "math.h"
+#include <math.h>
 #include "mpu6050.h"
 
 #define PI 3.14159265
+Odometry Odom;
 
 void TIM1_UP_TIM16_IRQHandler(void) {
   if (TIM1->SR & 0X0001)  // 5ms定时中断
   {
     TIM1->SR &= ~(1 << 0);  //===清除定时器1中断标志位
-    readEncoder();          //===读取编码器的值
-    Led_Flash(20);          //===LED闪烁
-    Get_battery_volt();     //===获取电池电压
-    // key(100);            //===扫描按键状态
-    // Get_Angle(Way_Angle); //===更新姿态
+    // key(100);
+    // Get_Angle(Way_Angle);
 
+    readEncoder();
+    CalOdom();
+    Led_Flash(20);
+    Get_battery_volt();
     pid_velocity_weizhi();
     //pid_velocity_zengliang();
-    Xianfu_Pwm();
     Set_Pwm(MotoL, MotoR);
   }
 }
@@ -31,8 +32,13 @@ void pid_velocity_weizhi(void) {
   // 速度
   DesireL = DesireVelocity * SampleTime * Unit;
   DesireR = DesireVelocity * SampleTime * Unit;
-  // 角速度 deg/s
-  DiffDis = (DesireAngVelo * SampleTime / 2.0 / 180 * PI) * Wheelbase / 2.0 * Unit;
+  // 角速度 rad/s
+  // DesireAngVelo 平分给两个轮，每个转动的弧度 theta = DesireAngVelo / 2.0
+  // 采样时间内转动的弧度 theta1 = theta * SampleTime
+  // sin(theta1) = d / (wheelbase/2)
+  // 每个轮需要运动的距离 d = sin(theta) * (wheelbase/2) = theta * wheelbase / 2
+  // 编码器的计数值 DiffDis = d * Unit
+  DiffDis = (DesireAngVelo / 2.0 * SampleTime) * Wheelbase / 2.0 * Unit;
   DesireL -= DiffDis;
   DesireR += DiffDis;
   ErrorL = ((int)DesireL - Encoder_Left);
@@ -61,9 +67,20 @@ void pid_velocity_zengliang(void) {
   static int PreErrorL = 0, PreErrorR = 0;
   static int LastErrorL = 0, LastErrorR = 0;
   int ErrorL = 0, ErrorR = 0;
+  float DiffDis = 0;
 
+  // 速度
   DesireL = DesireVelocity * SampleTime * Unit;
   DesireR = DesireVelocity * SampleTime * Unit;
+  // 角速度 rad/s
+  // DesireAngVelo 平分给两个轮，每个转动的弧度 theta = DesireAngVelo / 2.0
+  // 采样时间内转动的弧度 theta1 = theta * SampleTime
+  // sin(theta1) = d / (wheelbase/2)
+  // 每个轮需要运动的距离 d = sin(theta) * (wheelbase/2) = theta * wheelbase / 2
+  // 编码器的计数值 DiffDis = d * Unit
+  DiffDis = (DesireAngVelo / 2.0 * SampleTime) * Wheelbase / 2.0 * Unit;
+  DesireL -= DiffDis;
+  DesireR += DiffDis;
   ErrorL = ((int)DesireL - Encoder_Left);
   ErrorR = ((int)DesireR - Encoder_Right);
   if (Stop) {
@@ -82,6 +99,7 @@ void pid_velocity_zengliang(void) {
 }
 
 void Set_Pwm(int moto1, int moto2) {
+  Xianfu_Pwm();
   if (Stop) {
     AIN1 = 0, AIN2 = 0;
     BIN1 = 0, BIN2 = 0;
@@ -115,8 +133,8 @@ void readEncoder(void) {
     Encoder_Right = Encoder_R - 65000;
   else
     Encoder_Right = Encoder_R;
-  Encoder_Left =
-      -Encoder_Left;  //这里取反是因为，平衡小车的两个电机是旋转了180度安装的，为了保证前进后退时候的编码器数据符号一致
+  //这里取反是因为，平衡小车的两个电机是旋转了180度安装的，为了保证前进后退时候的编码器数据符号一致
+  Encoder_Left = -Encoder_Left;
 }
 
 void Xianfu_Pwm(void) {
@@ -158,3 +176,27 @@ void Xianfu_Pwm(void) {
 // //更新转向角速度
 // 	  	}
 // }
+
+void CalOdom(void) {
+  int EncoderLeft =0, EncoderRight = 0;
+  float DisLeft=0, DisRight=0, Distance=0, DistanceDiff=0, Theta=0, r=0;
+
+  if (MotoL < 0) EncoderLeft = -Encoder_Left;
+  else EncoderLeft = Encoder_Left;
+  if (MotoR < 0) EncoderRight = -Encoder_Right;
+  else EncoderRight = Encoder_Right;
+  DisLeft = (float)EncoderLeft / Unit;            //左轮行驶的距离，m
+  DisRight = (float)EncoderRight / Unit;          //右轮行驶的距离，m
+  DistanceDiff = DisRight - DisLeft;              //两轮行驶的距离差，m
+  Distance = (DisLeft + DisRight) / 2.0;          //两轮平均行驶距离，m
+  Odom.velocity_linear = Distance / SampleTime;   //小车线速度，m/s
+  Theta = DistanceDiff / Wheelbase;               //小车转向角，rad  当θ很小时，θ ≈ sin(θ)
+  Odom.velocity_anglar = Theta / SampleTime;      //角速度，rad/s
+  Odom.oriention += Theta;                        //朝向角，rad
+  if (Odom.oriention > PI) Odom.oriention -= 2*PI;
+  if (Odom.oriention < -PI) Odom.oriention += 2*PI;
+  r = Distance / Theta;                           //转弯半径
+  Odom.x += r * Theta;                            //小车x坐标
+  Odom.y += r * (1-cos(Theta));                   //小车y坐标
+}
+

@@ -48,3 +48,5 @@ void delay_us(u32 nus) {
   SysTick->CTRL = 0x00;                          //关闭计数器
   SysTick->VAL = 0X00;                           //清空计数器
 }
+
+void get_ms(unsigned long *count) {}

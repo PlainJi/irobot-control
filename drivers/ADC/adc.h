@@ -8,18 +8,3 @@ void Adc_Init(void);
 void Get_battery_volt(void); 
  
 #endif 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

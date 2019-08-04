@@ -33,12 +33,6 @@ void pid_velocity_weizhi(void) {
   DesireL = DesireVelocity * SampleTime * Unit;
   DesireR = DesireVelocity * SampleTime * Unit;
   // 角速度 rad/s
-  // DesireAngVelo 平分给两个轮，每个转动的弧度 theta = DesireAngVelo / 2.0
-  // 采样时间内转动的弧度 theta1 = theta * SampleTime
-  // sin(theta1) = d / (wheelbase/2)
-  // 每个轮需要运动的距离 d = sin(theta) * (wheelbase/2) = theta * wheelbase / 2
-  // 编码器的计数值 DiffDis = d * Unit
-
   // 本次要转动的角度 theta = DesireAngVelo * SampleTime
   // Theta = dis / base   dis = theta * base
   // 每个轮子移动距离 d = dis/2 = theta * base / 2
@@ -77,11 +71,9 @@ void pid_velocity_zengliang(void) {
   DesireL = DesireVelocity * SampleTime * Unit;
   DesireR = DesireVelocity * SampleTime * Unit;
   // 角速度 rad/s
-  // DesireAngVelo 平分给两个轮，每个转动的弧度 theta = DesireAngVelo / 2.0
-  // 采样时间内转动的弧度 theta1 = theta * SampleTime
-  // sin(theta1) = d / (wheelbase/2)
-  // 每个轮需要运动的距离 d = sin(theta) * (wheelbase/2) = theta * wheelbase / 2
-  // 编码器的计数值 DiffDis = d * Unit
+  // 本次要转动的角度 theta = DesireAngVelo * SampleTime
+  // Theta = dis / base   dis = theta * base
+  // 每个轮子移动距离 d = dis/2 = theta * base / 2
   DiffDis = DesireAngVelo * SampleTime * Wheelbase / 2.0 * Unit;
   DesireL -= DiffDis;
   DesireR += DiffDis;
@@ -103,50 +95,50 @@ void pid_velocity_zengliang(void) {
 }
 
 void Set_Pwm(int moto1, int moto2) {
-  Xianfu_Pwm();
-  if (Stop) {
-    AIN1 = 0, AIN2 = 0;
-    BIN1 = 0, BIN2 = 0;
-  } else {
-    if (moto1 < 0)
-      AIN2 = 1, AIN1 = 0;
-    else
-      AIN2 = 0, AIN1 = 1;
-    PWMA = abs(moto1);
-
-    if (moto2 < 0)
-      BIN1 = 0, BIN2 = 1;
-    else
-      BIN1 = 1, BIN2 = 0;
-    PWMB = abs(moto2);
-  }
-}
-
-void readEncoder(void) {
-  u16 Encoder_L, Encoder_R;  //===左右编码器的脉冲计数
-  Encoder_R = TIM4->CNT;     //===获取正交解码1数据
-  TIM4->CNT = 0;             //===计数器清零
-  Encoder_L = TIM2->CNT;     //===获取正交解码2数据
-  TIM2->CNT = 0;             //===计数器清零
-  if (Encoder_L > 32768)
-    Encoder_Left = Encoder_L - 65000;
-  else
-    Encoder_Left = Encoder_L;
-  //=这个处理的原因是：编码器到0后会跳到65000向下计数，这样处理方便我们在控制程序中使用
-  if (Encoder_R > 32768)
-    Encoder_Right = Encoder_R - 65000;
-  else
-    Encoder_Right = Encoder_R;
-  //这里取反是因为，平衡小车的两个电机是旋转了180度安装的，为了保证前进后退时候的编码器数据符号一致
-  Encoder_Left = -Encoder_Left;
-}
-
-void Xianfu_Pwm(void) {
-  int Amplitude = 3500;  //===PWM满幅是3600 限制在3500
+  // PWM满幅是3600 限制在3500
+  int Amplitude = 3500;
   if (MotoL < -Amplitude) MotoL = -Amplitude;
   if (MotoL > Amplitude) MotoL = Amplitude;
   if (MotoR < -Amplitude) MotoR = -Amplitude;
   if (MotoR > Amplitude) MotoR = Amplitude;
+
+  if (Stop) {
+    AIN1 = 0, AIN2 = 0;
+    BIN1 = 0, BIN2 = 0;
+  } else {
+    if (MotoL < 0)
+      AIN2 = 1, AIN1 = 0;
+    else
+      AIN2 = 0, AIN1 = 1;
+    PWMA = abs(MotoL);
+
+    if (MotoR < 0)
+      BIN1 = 0, BIN2 = 1;
+    else
+      BIN1 = 1, BIN2 = 0;
+    PWMB = abs(MotoR);
+  }
+}
+
+void readEncoder(void) {
+  u16 Encoder_L, Encoder_R;
+  Encoder_R = TIM4->CNT;
+  TIM4->CNT = 0;
+  Encoder_L = TIM2->CNT;
+  TIM2->CNT = 0;
+
+  //这个处理的原因是：编码器到0后会跳到65000向下计数，这样处理方便我们在控制程序中使用
+  if (Encoder_L > 32768)
+    Encoder_Left = Encoder_L - 65000;
+  else
+    Encoder_Left = Encoder_L;
+  if (Encoder_R > 32768)
+    Encoder_Right = Encoder_R - 65000;
+  else
+    Encoder_Right = Encoder_R;
+
+  //这里取反是因为，平衡小车的两个电机是旋转了180度安装的，为了保证前进后退时候的编码器数据符号一致
+  Encoder_Left = -Encoder_Left;
 }
 
 // void Get_Angle(u8 way)
@@ -185,10 +177,9 @@ void CalOdom(void) {
   int EncoderLeft =0, EncoderRight = 0;
   float DisLeft=0, DisRight=0, Distance=0, DistanceDiff=0, Theta=0, r=0;
 
-  if (MotoL < 0) EncoderLeft = -Encoder_Left;
-  else EncoderLeft = Encoder_Left;
-  if (MotoR < 0) EncoderRight = -Encoder_Right;
-  else EncoderRight = Encoder_Right;
+  EncoderLeft = Encoder_Left;
+  EncoderRight = Encoder_Right;
+
   DisLeft = (float)EncoderLeft / Unit;            //左轮行驶的距离，m
   DisRight = (float)EncoderRight / Unit;          //右轮行驶的距离，m
   DistanceDiff = DisRight - DisLeft;              //两轮行驶的距离差，m

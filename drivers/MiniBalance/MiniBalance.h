@@ -18,7 +18,6 @@ void pid_velocity_weizhi(void);
 void pid_velocity_zengliang(void);
 void Set_Pwm(int moto1,int moto2);
 void readEncoder(void);
-void Xianfu_Pwm(void);
 u8 Turn_Off(float angle, int voltage);
 void Get_Angle(u8 way);
 void CalOdom(void);

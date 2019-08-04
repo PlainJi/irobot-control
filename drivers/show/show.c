@@ -26,7 +26,7 @@ void DataScope(void) {
   DataScope_Get_Channel_Data(0, 10);
 
   SendCount = DataScope_Data_Generate(5);
-  for (i = 0; i < SendCount; i++) {
+   for (i = 0; i < SendCount; i++) {
     while ((USART1->SR & 0X40) == 0);
     USART1->DR = DataScope_OutPut_Buffer[i];
   }

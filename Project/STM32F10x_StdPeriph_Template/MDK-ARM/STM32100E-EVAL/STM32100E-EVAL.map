@@ -1073,11 +1073,11 @@ Removing Unused input sections from the image.
     Removing filter.o(i.Yijielvbo), (116 bytes).
     Removing filter.o(.bss), (16 bytes).
     Removing filter.o(.data), (84 bytes).
-    Removing minibalance.o(i.pid_velocity_zengliang), (444 bytes).
+    Removing minibalance.o(i.pid_velocity_zengliang), (424 bytes).
     Removing dsqrt.o(.text), (162 bytes).
     Removing cdcmple.o(.text), (48 bytes).
 
-152 unused section(s) (total 10370 bytes) removed from the image.
+152 unused section(s) (total 10350 bytes) removed from the image.
 
 ==============================================================================
 
@@ -1386,27 +1386,27 @@ Image Symbol Table
     i.mpu_set_sensors                        0x08004a90   Section        0  inv_mpu.o(i.mpu_set_sensors)
     i.mpu_write_mem                          0x08004b48   Section        0  inv_mpu.o(i.mpu_write_mem)
     i.pid_velocity_weizhi                    0x08004b9c   Section        0  minibalance.o(i.pid_velocity_weizhi)
-    i.readEncoder                            0x08004d54   Section        0  minibalance.o(i.readEncoder)
-    i.run_self_test                          0x08004d94   Section        0  mpu6050.o(i.run_self_test)
-    run_self_test                            0x08004d95   Thumb Code   128  mpu6050.o(i.run_self_test)
-    i.set_int_enable                         0x08004e38   Section        0  inv_mpu.o(i.set_int_enable)
-    set_int_enable                           0x08004e39   Thumb Code    84  inv_mpu.o(i.set_int_enable)
-    i.uart3_init                             0x08004e90   Section        0  usart3.o(i.uart3_init)
-    i.usart1_init                            0x08004f54   Section        0  usart1.o(i.usart1_init)
-    i.usart1_receive                         0x08005000   Section        0  usart1.o(i.usart1_receive)
-    .constdata                               0x08005018   Section       12  inv_mpu.o(.constdata)
-    .constdata                               0x08005024   Section       27  inv_mpu.o(.constdata)
-    .constdata                               0x08005040   Section       40  inv_mpu.o(.constdata)
-    .constdata                               0x08005068   Section     3062  inv_mpu_dmp_motion_driver.o(.constdata)
-    dmp_memory                               0x08005068   Data        3062  inv_mpu_dmp_motion_driver.o(.constdata)
-    .constdata                               0x08005c60   Section       48  cos_i.o(.constdata)
-    C                                        0x08005c60   Data          48  cos_i.o(.constdata)
-    .constdata                               0x08005c90   Section      200  rred.o(.constdata)
-    pio2s                                    0x08005c90   Data          48  rred.o(.constdata)
-    twooverpi                                0x08005cc0   Data         152  rred.o(.constdata)
-    .constdata                               0x08005d58   Section       40  sin_i.o(.constdata)
-    S                                        0x08005d58   Data          40  sin_i.o(.constdata)
-    .conststring                             0x08005d80   Section       78  inv_mpu.o(.conststring)
+    i.readEncoder                            0x08004d40   Section        0  minibalance.o(i.readEncoder)
+    i.run_self_test                          0x08004d80   Section        0  mpu6050.o(i.run_self_test)
+    run_self_test                            0x08004d81   Thumb Code   128  mpu6050.o(i.run_self_test)
+    i.set_int_enable                         0x08004e24   Section        0  inv_mpu.o(i.set_int_enable)
+    set_int_enable                           0x08004e25   Thumb Code    84  inv_mpu.o(i.set_int_enable)
+    i.uart3_init                             0x08004e7c   Section        0  usart3.o(i.uart3_init)
+    i.usart1_init                            0x08004f40   Section        0  usart1.o(i.usart1_init)
+    i.usart1_receive                         0x08004fec   Section        0  usart1.o(i.usart1_receive)
+    .constdata                               0x08005004   Section       12  inv_mpu.o(.constdata)
+    .constdata                               0x08005010   Section       27  inv_mpu.o(.constdata)
+    .constdata                               0x0800502c   Section       40  inv_mpu.o(.constdata)
+    .constdata                               0x08005054   Section     3062  inv_mpu_dmp_motion_driver.o(.constdata)
+    dmp_memory                               0x08005054   Data        3062  inv_mpu_dmp_motion_driver.o(.constdata)
+    .constdata                               0x08005c50   Section       48  cos_i.o(.constdata)
+    C                                        0x08005c50   Data          48  cos_i.o(.constdata)
+    .constdata                               0x08005c80   Section      200  rred.o(.constdata)
+    pio2s                                    0x08005c80   Data          48  rred.o(.constdata)
+    twooverpi                                0x08005cb0   Data         152  rred.o(.constdata)
+    .constdata                               0x08005d48   Section       40  sin_i.o(.constdata)
+    S                                        0x08005d48   Data          40  sin_i.o(.constdata)
+    .conststring                             0x08005d70   Section       78  inv_mpu.o(.conststring)
     .data                                    0x20000000   Section        4  main.o(.data)
     .data                                    0x20000004   Section        4  main.o(.data)
     .data                                    0x20000008   Section        4  main.o(.data)
@@ -1754,16 +1754,16 @@ Image Symbol Table
     mpu_set_sample_rate                      0x08004a11   Thumb Code   124  inv_mpu.o(i.mpu_set_sample_rate)
     mpu_set_sensors                          0x08004a91   Thumb Code   178  inv_mpu.o(i.mpu_set_sensors)
     mpu_write_mem                            0x08004b49   Thumb Code    80  inv_mpu.o(i.mpu_write_mem)
-    pid_velocity_weizhi                      0x08004b9d   Thumb Code   362  minibalance.o(i.pid_velocity_weizhi)
-    readEncoder                              0x08004d55   Thumb Code    52  minibalance.o(i.readEncoder)
-    uart3_init                               0x08004e91   Thumb Code   180  usart3.o(i.uart3_init)
-    usart1_init                              0x08004f55   Thumb Code   164  usart1.o(i.usart1_init)
-    usart1_receive                           0x08005001   Thumb Code    18  usart1.o(i.usart1_receive)
-    hw                                       0x08005018   Data          12  inv_mpu.o(.constdata)
-    reg                                      0x08005024   Data          27  inv_mpu.o(.constdata)
-    test                                     0x08005040   Data          40  inv_mpu.o(.constdata)
-    Region$$Table$$Base                      0x08005dd0   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x08005df0   Number         0  anon$$obj.o(Region$$Table)
+    pid_velocity_weizhi                      0x08004b9d   Thumb Code   346  minibalance.o(i.pid_velocity_weizhi)
+    readEncoder                              0x08004d41   Thumb Code    52  minibalance.o(i.readEncoder)
+    uart3_init                               0x08004e7d   Thumb Code   180  usart3.o(i.uart3_init)
+    usart1_init                              0x08004f41   Thumb Code   164  usart1.o(i.usart1_init)
+    usart1_receive                           0x08004fed   Thumb Code    18  usart1.o(i.usart1_receive)
+    hw                                       0x08005004   Data          12  inv_mpu.o(.constdata)
+    reg                                      0x08005010   Data          27  inv_mpu.o(.constdata)
+    test                                     0x0800502c   Data          40  inv_mpu.o(.constdata)
+    Region$$Table$$Base                      0x08005dc0   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x08005de0   Number         0  anon$$obj.o(Region$$Table)
     MotoL                                    0x20000000   Data           4  main.o(.data)
     MotoR                                    0x20000004   Data           4  main.o(.data)
     DesireL                                  0x20000008   Data           4  main.o(.data)
@@ -1799,9 +1799,9 @@ Memory Map of the image
 
   Image Entry point : 0x08000135
 
-  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x00005edc, Max: 0x00080000, ABSOLUTE)
+  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x00005ecc, Max: 0x00080000, ABSOLUTE)
 
-    Execution Region ER_IROM1 (Base: 0x08000000, Size: 0x00005df0, Max: 0x00080000, ABSOLUTE)
+    Execution Region ER_IROM1 (Base: 0x08000000, Size: 0x00005de0, Max: 0x00080000, ABSOLUTE)
 
     Base Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -2007,25 +2007,25 @@ Memory Map of the image
     0x08004a10   0x00000080   Code   RO         1022    i.mpu_set_sample_rate  inv_mpu.o
     0x08004a90   0x000000b8   Code   RO         1023    i.mpu_set_sensors   inv_mpu.o
     0x08004b48   0x00000054   Code   RO         1024    i.mpu_write_mem     inv_mpu.o
-    0x08004b9c   0x000001b8   Code   RO         1938    i.pid_velocity_weizhi  minibalance.o
-    0x08004d54   0x00000040   Code   RO         1940    i.readEncoder       minibalance.o
-    0x08004d94   0x000000a4   Code   RO         1704    i.run_self_test     mpu6050.o
-    0x08004e38   0x00000058   Code   RO         1025    i.set_int_enable    inv_mpu.o
-    0x08004e90   0x000000c4   Code   RO         1794    i.uart3_init        usart3.o
-    0x08004f54   0x000000ac   Code   RO          900    i.usart1_init       usart1.o
-    0x08005000   0x00000018   Code   RO          901    i.usart1_receive    usart1.o
-    0x08005018   0x0000000c   Data   RO         1026    .constdata          inv_mpu.o
-    0x08005024   0x0000001b   Data   RO         1027    .constdata          inv_mpu.o
-    0x0800503f   0x00000001   PAD
-    0x08005040   0x00000028   Data   RO         1028    .constdata          inv_mpu.o
-    0x08005068   0x00000bf6   Data   RO         1293    .constdata          inv_mpu_dmp_motion_driver.o
-    0x08005c5e   0x00000002   PAD
-    0x08005c60   0x00000030   Data   RO         2313    .constdata          m_ws.l(cos_i.o)
-    0x08005c90   0x000000c8   Data   RO         2335    .constdata          m_ws.l(rred.o)
-    0x08005d58   0x00000028   Data   RO         2339    .constdata          m_ws.l(sin_i.o)
-    0x08005d80   0x0000004e   Data   RO         1029    .conststring        inv_mpu.o
-    0x08005dce   0x00000002   PAD
-    0x08005dd0   0x00000020   Data   RO         2401    Region$$Table       anon$$obj.o
+    0x08004b9c   0x000001a4   Code   RO         1938    i.pid_velocity_weizhi  minibalance.o
+    0x08004d40   0x00000040   Code   RO         1940    i.readEncoder       minibalance.o
+    0x08004d80   0x000000a4   Code   RO         1704    i.run_self_test     mpu6050.o
+    0x08004e24   0x00000058   Code   RO         1025    i.set_int_enable    inv_mpu.o
+    0x08004e7c   0x000000c4   Code   RO         1794    i.uart3_init        usart3.o
+    0x08004f40   0x000000ac   Code   RO          900    i.usart1_init       usart1.o
+    0x08004fec   0x00000018   Code   RO          901    i.usart1_receive    usart1.o
+    0x08005004   0x0000000c   Data   RO         1026    .constdata          inv_mpu.o
+    0x08005010   0x0000001b   Data   RO         1027    .constdata          inv_mpu.o
+    0x0800502b   0x00000001   PAD
+    0x0800502c   0x00000028   Data   RO         1028    .constdata          inv_mpu.o
+    0x08005054   0x00000bf6   Data   RO         1293    .constdata          inv_mpu_dmp_motion_driver.o
+    0x08005c4a   0x00000006   PAD
+    0x08005c50   0x00000030   Data   RO         2313    .constdata          m_ws.l(cos_i.o)
+    0x08005c80   0x000000c8   Data   RO         2335    .constdata          m_ws.l(rred.o)
+    0x08005d48   0x00000028   Data   RO         2339    .constdata          m_ws.l(sin_i.o)
+    0x08005d70   0x0000004e   Data   RO         1029    .conststring        inv_mpu.o
+    0x08005dbe   0x00000002   PAD
+    0x08005dc0   0x00000020   Data   RO         2401    Region$$Table       anon$$obj.o
 
 
     Execution Region RW_IRAM1 (Base: 0x20000000, Size: 0x00000940, Max: 0x00010000, ABSOLUTE)
@@ -2083,7 +2083,7 @@ Image component sizes
         40         10          0          0          0        455   key.o
         80         20          0          4          0        959   led.o
        112          0          0         49          0       2595   main.o
-      1072        184          0         32         20       5620   minibalance.o
+      1052        180          0         32         20       5620   minibalance.o
        100          6          0          0          0       3004   misc.o
        912        370          0         45          0      22730   mpu6050.o
        624         64          0          0       1024       4274   oled.o
@@ -2099,9 +2099,9 @@ Image component sizes
        564         90          0         21          0       1449   usart3.o
 
     ----------------------------------------------------------------------
-     13660       1446       3564        228       2132     585702   Object Totals
+     13640       1442       3568        228       2132     585702   Object Totals
          0          0         32          0          0          0   (incl. Generated)
-        26          0          5          9          6          0   (incl. Padding)
+        26          0          9          9          6          0   (incl. Padding)
 
     ----------------------------------------------------------------------
 
@@ -2181,15 +2181,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-     20196       1682       3852        236       2132     581018   Grand Totals
-     20196       1682       3852        236       2132     581018   ELF Image Totals
-     20196       1682       3852        236          0          0   ROM Totals
+     20176       1678       3856        236       2132     581018   Grand Totals
+     20176       1678       3856        236       2132     581018   ELF Image Totals
+     20176       1678       3856        236          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                24048 (  23.48kB)
+    Total RO  Size (Code + RO Data)                24032 (  23.47kB)
     Total RW  Size (RW Data + ZI Data)              2368 (   2.31kB)
-    Total ROM Size (Code + RO Data + RW Data)      24284 (  23.71kB)
+    Total ROM Size (Code + RO Data + RW Data)      24268 (  23.70kB)
 
 ==============================================================================
 

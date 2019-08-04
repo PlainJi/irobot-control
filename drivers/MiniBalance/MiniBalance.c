@@ -38,7 +38,11 @@ void pid_velocity_weizhi(void) {
   // sin(theta1) = d / (wheelbase/2)
   // 每个轮需要运动的距离 d = sin(theta) * (wheelbase/2) = theta * wheelbase / 2
   // 编码器的计数值 DiffDis = d * Unit
-  DiffDis = (DesireAngVelo / 2.0 * SampleTime) * Wheelbase / 2.0 * Unit;
+
+  // 本次要转动的角度 theta = DesireAngVelo * SampleTime
+  // Theta = dis / base   dis = theta * base
+  // 每个轮子移动距离 d = dis/2 = theta * base / 2
+  DiffDis = DesireAngVelo * SampleTime * Wheelbase / 2.0 * Unit;
   DesireL -= DiffDis;
   DesireR += DiffDis;
   ErrorL = ((int)DesireL - Encoder_Left);
@@ -78,7 +82,7 @@ void pid_velocity_zengliang(void) {
   // sin(theta1) = d / (wheelbase/2)
   // 每个轮需要运动的距离 d = sin(theta) * (wheelbase/2) = theta * wheelbase / 2
   // 编码器的计数值 DiffDis = d * Unit
-  DiffDis = (DesireAngVelo / 2.0 * SampleTime) * Wheelbase / 2.0 * Unit;
+  DiffDis = DesireAngVelo * SampleTime * Wheelbase / 2.0 * Unit;
   DesireL -= DiffDis;
   DesireR += DiffDis;
   ErrorL = ((int)DesireL - Encoder_Left);

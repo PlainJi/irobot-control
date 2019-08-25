@@ -13,12 +13,10 @@ typedef struct _odom {
 
 extern Odometry Odom;
 extern	int Balance_Pwm,Velocity_Pwm,Turn_Pwm;
-void TIM1_UP_TIM16_IRQHandler(void);  
+void TIM1_UP_TIM16_IRQHandler(void);
 void pid_velocity_weizhi(void);
 void pid_velocity_zengliang(void);
-void Set_Pwm(int moto1,int moto2);
+void Set_Pwm(void);
 void readEncoder(void);
-u8 Turn_Off(float angle, int voltage);
-void Get_Angle(u8 way);
-void CalOdom(void);
+void Report(void);
 #endif

@@ -10,16 +10,14 @@ void TIM1_UP_TIM16_IRQHandler(void) {
   if (TIM1->SR & 0X0001)  // 5ms定时中断
   {
     TIM1->SR &= ~(1 << 0);  //===清除定时器1中断标志位
-    // key(100);
-    // Get_Angle(Way_Angle);
 
     readEncoder();
-    CalOdom();
-    Led_Flash(20);
-    Get_battery_volt();
     pid_velocity_weizhi();
     //pid_velocity_zengliang();
-    Set_Pwm(MotoL, MotoR);
+    Set_Pwm();
+
+    Report();
+    Led_Flash(20);
   }
 }
 
@@ -27,20 +25,11 @@ void pid_velocity_weizhi(void) {
   static int IntegralL = 0, IntegralR = 0;
   static int LastErrorL = 0, LastErrorR = 0;
   int ErrorL = 0, ErrorR = 0;
-  float DiffDis = 0;
+  int desire_encoder_l = DesireL * SampleTime;
+  int desire_encoder_r = DesireR * SampleTime;
 
-  // 速度
-  DesireL = DesireVelocity * SampleTime * Unit;
-  DesireR = DesireVelocity * SampleTime * Unit;
-  // 角速度 rad/s
-  // 本次要转动的角度 theta = DesireAngVelo * SampleTime
-  // Theta = dis / base   dis = theta * base
-  // 每个轮子移动距离 d = dis/2 = theta * base / 2
-  DiffDis = DesireAngVelo * SampleTime * Wheelbase / 2.0 * Unit;
-  DesireL -= DiffDis;
-  DesireR += DiffDis;
-  ErrorL = ((int)DesireL - Encoder_Left);
-  ErrorR = ((int)DesireR - Encoder_Right);
+  ErrorL = ((int)desire_encoder_l - Encoder_Left);
+  ErrorR = ((int)desire_encoder_r - Encoder_Right);
   if (Stop) {
     MotoL = 0, MotoR = 0;
     IntegralL = 0, IntegralR = 0;
@@ -65,20 +54,11 @@ void pid_velocity_zengliang(void) {
   static int PreErrorL = 0, PreErrorR = 0;
   static int LastErrorL = 0, LastErrorR = 0;
   int ErrorL = 0, ErrorR = 0;
-  float DiffDis = 0;
+  int desire_encoder_l = DesireL * SampleTime;
+  int desire_encoder_r = DesireR * SampleTime;
 
-  // 速度
-  DesireL = DesireVelocity * SampleTime * Unit;
-  DesireR = DesireVelocity * SampleTime * Unit;
-  // 角速度 rad/s
-  // 本次要转动的角度 theta = DesireAngVelo * SampleTime
-  // Theta = dis / base   dis = theta * base
-  // 每个轮子移动距离 d = dis/2 = theta * base / 2
-  DiffDis = DesireAngVelo * SampleTime * Wheelbase / 2.0 * Unit;
-  DesireL -= DiffDis;
-  DesireR += DiffDis;
-  ErrorL = ((int)DesireL - Encoder_Left);
-  ErrorR = ((int)DesireR - Encoder_Right);
+  ErrorL = ((int)desire_encoder_l - Encoder_Left);
+  ErrorR = ((int)desire_encoder_r - Encoder_Right);
   if (Stop) {
     MotoL = 0, MotoR = 0;
   } else {
@@ -94,7 +74,7 @@ void pid_velocity_zengliang(void) {
   LastErrorR = ErrorR;
 }
 
-void Set_Pwm(int moto1, int moto2) {
+void Set_Pwm(void) {
   // PWM满幅是3600 限制在3500
   int Amplitude = 3500;
   if (MotoL < -Amplitude) MotoL = -Amplitude;
@@ -173,25 +153,22 @@ void readEncoder(void) {
 // 	  	}
 // }
 
-void CalOdom(void) {
-  int EncoderLeft =0, EncoderRight = 0;
-  float DisLeft=0, DisRight=0, Distance=0, DistanceDiff=0, Theta=0, r=0;
+void Report(void) {
+  static u8 cnt = 0;
+  static s16 Encoder_Left_Report = 0;
+  static s16 Encoder_Right_Report = 0;
 
-  EncoderLeft = Encoder_Left;
-  EncoderRight = Encoder_Right;
-
-  DisLeft = (float)EncoderLeft / Unit;            //左轮行驶的距离，m
-  DisRight = (float)EncoderRight / Unit;          //右轮行驶的距离，m
-  DistanceDiff = DisRight - DisLeft;              //两轮行驶的距离差，m
-  Distance = (DisLeft + DisRight) / 2.0;          //两轮平均行驶距离，m
-  Odom.velocity_linear = Distance / SampleTime;   //小车线速度，m/s
-  Theta = DistanceDiff / Wheelbase;               //小车转向角，rad  当θ很小时，θ ≈ sin(θ)
-  Odom.velocity_anglar = Theta / SampleTime;      //角速度，rad/s
-  Odom.oriention += Theta;                        //朝向角，rad
-  if (Odom.oriention > PI) Odom.oriention -= 2*PI;
-  if (Odom.oriention < -PI) Odom.oriention += 2*PI;
-  r = Distance / Theta;                           //转弯半径
-  Odom.x += r * Theta;                            //小车x坐标
-  Odom.y += r * (1-cos(Theta));                   //小车y坐标
+  Encoder_Left_Report += Encoder_Left;
+  Encoder_Right_Report += Encoder_Right;
+  cnt++;
+  if (!(cnt%EncoderReportCnt)) {
+    USART1_ReportEncoder(Encoder_Left_Report, Encoder_Right_Report);
+    Encoder_Left_Report = 0;
+    Encoder_Right_Report = 0;
+  }
+  if (!(cnt%BatteryReportCnt)) {
+    Get_battery_volt();
+    USART1_ReportBattery(Voltage);
+    cnt = 0;
+  }
 }
-

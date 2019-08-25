@@ -1,11 +1,11 @@
 #include "main.h"
 
-uint8_t buffer1[14];
+char uart1_recv_buf[17] = "$+12345,+12345\n";
+char uart1_send_buf[17] = "#+12345,+12345\n";
 
 int fputc(int ch, FILE *f) {
   USART1->DR = (u8)ch;
-  while ((USART1->SR & 0X40) == 0)
-    ;
+  while ((USART1->SR & 0X40) == 0);
   return ch;
 }
 
@@ -25,7 +25,7 @@ void usart1_init(void) {
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;  //配置PA10为浮地输入
   GPIO_Init(GPIOA, &GPIO_InitStructure);
   // UART1的配置:
-  USART_InitStructure.USART_BaudRate = 115200;                 //波特率
+  USART_InitStructure.USART_BaudRate = 460800;                 //波特率
   USART_InitStructure.USART_WordLength = USART_WordLength_8b;  // 8位数据
   USART_InitStructure.USART_StopBits = USART_StopBits_1;       //一个停止位
   USART_InitStructure.USART_Parity = USART_Parity_No;          //无奇偶效验
@@ -48,43 +48,60 @@ void usart1_init(void) {
 }
 
 u8 usart1_receive(void) {
-  while ((USART1->SR & 0x20) == 0)
-    ;
+  while ((USART1->SR & 0x20) == 0);
   return USART1->DR;
 }
 
 void usart1_send(u8 data) {
   USART1->DR = data;
-  while ((USART1->SR & 0x40) == 0)
-    ;
+  while ((USART1->SR & 0x40) == 0);
 }
 
 void USART1_IRQHandler(void) {
-  if (USART_GetITStatus(USART1, USART_IT_RXNE) != RESET) {
-    u8 rxTemp;
-    rxTemp = usart1_receive();
-    if (rxTemp == 0xa5) {
-      rxTemp = usart1_receive();
-      if (rxTemp == 0x5a) {
-        switch (usart1_receive()) {
-          case 0xa1:
-            command1();
-            break;
-          case 0xa2:
-            command2();
-            break;
-          case 0xa3:
-            command3();
-            break;
-            // default:	usart1_send(0xff);
-        }
+  static u8 p_w = 0;
+  char uart_receive = 0;
+  //if (USART_GetITStatus(USART1, USART_IT_RXNE) != RESET) {
+  if (USART1->SR & (1 << 5)) {
+    uart_receive = USART1->DR;
+    if (uart_receive == '$') p_w = 0;
+    if (p_w == sizeof(uart1_recv_buf)) p_w = 0;
+    uart1_recv_buf[p_w++] = uart_receive;
+
+    if (uart_receive == '\n' && uart1_recv_buf[0] == '$') {
+      DesireL = (uart1_recv_buf[2]-'0')*10000 + (uart1_recv_buf[3]-'0')*1000 +
+        (uart1_recv_buf[4]-'0')*100 + (uart1_recv_buf[5]-'0')*10 + (uart1_recv_buf[6]-'0');
+      if (uart1_recv_buf[1] == '-') {
+        DesireL = -DesireL;
+      }
+
+      DesireR = (uart1_recv_buf[9]-'0')*10000 + (uart1_recv_buf[10]-'0')*1000 +
+        (uart1_recv_buf[11]-'0')*100 + (uart1_recv_buf[12]-'0')*10 + (uart1_recv_buf[13]-'0');
+      if (uart1_recv_buf[8] == '-') {
+        DesireR = -DesireR;
       }
     }
   }
 }
 
-void command1(void) {}
+void USART1_ReportEncoder(s16 l, s16 r) {
+  u8 cnt = 0;
+  u8 send_cnt = 15;
 
-void command2(void) {}
+  sprintf(uart1_send_buf, "#%+06d,%+06d\n", l, r);
+  while (cnt < send_cnt) {
+    USART1->DR = uart1_send_buf[cnt++];
+    while ((USART1->SR & 0x40) == 0);
+  }
+}
 
-void command3(void) {}
+void USART1_ReportBattery(int voltage) {
+  u8 cnt = 0;
+  u8 send_cnt = 7;
+
+  sprintf(uart1_send_buf, "#%+06d\n", voltage);
+  while (cnt < send_cnt) {
+    USART1->DR = uart1_send_buf[cnt++];
+    while ((USART1->SR & 0x40) == 0);
+  }
+}
+

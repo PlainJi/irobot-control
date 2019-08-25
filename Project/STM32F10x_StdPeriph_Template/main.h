@@ -14,6 +14,7 @@
 #include "timer.h"
 #include "mpu6050.h"
 #include "usart3.h"
+#include "usart1.h"
 #include "adc.h"
 #include "DataScope_DP.h"
 
@@ -28,6 +29,9 @@ extern float DesireAngVelo;
 #define Perimeter   (0.206f)			        //轮子周长 m
 #define Unit        (512*27/Perimeter)	        //每米对应的编码器脉冲数
 #define SampleTime  (0.005f)			        //编码器采样周期 5ms
+#define ReportTime  (0.020f)                    //编码器上报周期 20ms
+#define EncoderReportCnt    (20)                //编码器读数每EncoderReportCnt反馈一次
+#define BatteryReportCnt    (200)               //电池电量每BatteryReportCnt反馈一次
 
 extern int Voltage;
 extern int Temperature;

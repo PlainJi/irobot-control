@@ -33,9 +33,8 @@ int main(void)
 	DMP_Init();                     //=====DMP初始化
 	Timer1_Init(49,7199);           //=====5MS进一次中断服务函数 中断服务函数在minibalance.c里面
 	
-	while(1)
-	{
-		DataScope();
+	while(1) {
+		//DataScope();
 		delay_ms(20);
-	}	
+	}
 }

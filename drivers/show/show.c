@@ -19,7 +19,7 @@ void DataScope(void) {
   DataScope_Get_Channel_Data(DesireAngVelo, 3);
   DataScope_Get_Channel_Data(Odom.velocity_linear, 4);
   DataScope_Get_Channel_Data(Odom.velocity_anglar, 5);
-  DataScope_Get_Channel_Data(0, 6);
+  DataScope_Get_Channel_Data(Encoder_Left, 6);
   DataScope_Get_Channel_Data(0, 7);
   DataScope_Get_Channel_Data(0, 8);
   DataScope_Get_Channel_Data(0, 9);

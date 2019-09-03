@@ -12,12 +12,11 @@ void TIM1_UP_TIM16_IRQHandler(void) {
     TIM1->SR &= ~(1 << 0);  //===清除定时器1中断标志位
 
     readEncoder();
+    report_flag=1;
     pid_velocity_weizhi();
     //pid_velocity_zengliang();
     Set_Pwm();
-
-    Report();
-    Led_Flash(20);
+    Led_Flash(200/led_freq);
   }
 }
 
@@ -25,11 +24,28 @@ void pid_velocity_weizhi(void) {
   static int IntegralL = 0, IntegralR = 0;
   static int LastErrorL = 0, LastErrorR = 0;
   int ErrorL = 0, ErrorR = 0;
-  int desire_encoder_l = DesireL * SampleTime;
-  int desire_encoder_r = DesireR * SampleTime;
+  int desire_left  = DesireL;
+	int desire_right = DesireR;
+  if (abs(desire_left)<=70 && abs(desire_right)<=70) {
+    led_freq = 1;
+  }
+ 	if (desire_left >  70) {
+    desire_left  =  70;
+    led_freq=10;
+  } else if (desire_left < -70) {
+    desire_left  = -70;
+    led_freq=10;
+  }
+	if (desire_right>  70) {
+    desire_right =  70;
+    led_freq=10;
+  } else if (desire_right< -70) {
+    desire_right = -70;
+    led_freq=10;
+  }
 
-  ErrorL = ((int)desire_encoder_l - Encoder_Left);
-  ErrorR = ((int)desire_encoder_r - Encoder_Right);
+  ErrorL = ((int)desire_left - Encoder_Left);
+  ErrorR = ((int)desire_right - Encoder_Right);
   if (Stop) {
     MotoL = 0, MotoR = 0;
     IntegralL = 0, IntegralR = 0;
@@ -54,11 +70,28 @@ void pid_velocity_zengliang(void) {
   static int PreErrorL = 0, PreErrorR = 0;
   static int LastErrorL = 0, LastErrorR = 0;
   int ErrorL = 0, ErrorR = 0;
-  int desire_encoder_l = DesireL * SampleTime;
-  int desire_encoder_r = DesireR * SampleTime;
+  int desire_left  = DesireL;
+	int desire_right = DesireR;
+	if (abs(desire_left)<=70 && abs(desire_right)<=70) {
+    led_freq = 1;
+  }
+ 	if (desire_left >  70) {
+    desire_left  =  70;
+    led_freq=10;
+  } else if (desire_left < -70) {
+    desire_left  = -70;
+    led_freq=10;
+  }
+	if (desire_right>  70) {
+    desire_right =  70;
+    led_freq=10;
+  } else if (desire_right< -70) {
+    desire_right = -70;
+    led_freq=10;
+  }
 
-  ErrorL = ((int)desire_encoder_l - Encoder_Left);
-  ErrorR = ((int)desire_encoder_r - Encoder_Right);
+  ErrorL = ((int)desire_left - Encoder_Left);
+  ErrorR = ((int)desire_right - Encoder_Right);
   if (Stop) {
     MotoL = 0, MotoR = 0;
   } else {
@@ -109,16 +142,16 @@ void readEncoder(void) {
 
   //这个处理的原因是：编码器到0后会跳到65000向下计数，这样处理方便我们在控制程序中使用
   if (Encoder_L > 32768)
-    Encoder_Left = Encoder_L - 65000;
+    Encoder_Left = -(Encoder_L - 65000);
   else
-    Encoder_Left = Encoder_L;
+    Encoder_Left = -Encoder_L;
   if (Encoder_R > 32768)
     Encoder_Right = Encoder_R - 65000;
   else
     Encoder_Right = Encoder_R;
 
   //这里取反是因为，平衡小车的两个电机是旋转了180度安装的，为了保证前进后退时候的编码器数据符号一致
-  Encoder_Left = -Encoder_Left;
+  //Encoder_Left = -Encoder_Left;
 }
 
 // void Get_Angle(u8 way)

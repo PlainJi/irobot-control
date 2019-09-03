@@ -9,5 +9,11 @@ void led_init(void) {
 
 void Led_Flash(u16 time) {
   static int temp;
-  if (++temp == time) LED1 = ~LED1, temp = 0;
+  if (temp > time) {
+    temp = 0;
+  }
+  if (++temp == time) {
+    LED1 = ~LED1;
+    temp = 0;
+  }
 }

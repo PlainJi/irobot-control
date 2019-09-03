@@ -17,8 +17,11 @@
 #include "usart1.h"
 #include "adc.h"
 #include "DataScope_DP.h"
+#include "MiniBalance.h"
 
 extern float velocity_kp, velocity_ki, velocity_kd;
+extern int led_freq;
+extern char report_flag;
 extern int MotoL,MotoR;
 extern int Encoder_Left,Encoder_Right;
 extern float DesireL, DesireR;

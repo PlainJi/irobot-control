@@ -25,7 +25,7 @@ void usart1_init(void) {
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;  //配置PA10为浮地输入
   GPIO_Init(GPIOA, &GPIO_InitStructure);
   // UART1的配置:
-  USART_InitStructure.USART_BaudRate = 460800;                 //波特率
+  USART_InitStructure.USART_BaudRate = 256000;                 //波特率
   USART_InitStructure.USART_WordLength = USART_WordLength_8b;  // 8位数据
   USART_InitStructure.USART_StopBits = USART_StopBits_1;       //一个停止位
   USART_InitStructure.USART_Parity = USART_Parity_No;          //无奇偶效验
@@ -47,42 +47,43 @@ void usart1_init(void) {
   NVIC_Init(&NVIC_InitStructure);
 }
 
-u8 usart1_receive(void) {
-  while ((USART1->SR & 0x20) == 0);
-  return USART1->DR;
-}
-
 void usart1_send(u8 data) {
   USART1->DR = data;
   while ((USART1->SR & 0x40) == 0);
 }
 
+// $+12345,+12345\n
 void USART1_IRQHandler(void) {
   static u8 p_w = 0;
   char uart_receive = 0;
-  //if (USART_GetITStatus(USART1, USART_IT_RXNE) != RESET) {
-  if (USART1->SR & (1 << 5)) {
+  static int temp_desire_l = 0;
+  static int temp_desire_r = 0;
+
+  if (USART1->SR & 0x20) {
     uart_receive = USART1->DR;
     if (uart_receive == '$') p_w = 0;
     if (p_w == sizeof(uart1_recv_buf)) p_w = 0;
     uart1_recv_buf[p_w++] = uart_receive;
 
     if (uart_receive == '\n' && uart1_recv_buf[0] == '$') {
-      DesireL = (uart1_recv_buf[2]-'0')*10000 + (uart1_recv_buf[3]-'0')*1000 +
+      temp_desire_l = (uart1_recv_buf[2]-'0')*10000 + (uart1_recv_buf[3]-'0')*1000 +
         (uart1_recv_buf[4]-'0')*100 + (uart1_recv_buf[5]-'0')*10 + (uart1_recv_buf[6]-'0');
       if (uart1_recv_buf[1] == '-') {
-        DesireL = -DesireL;
+        temp_desire_l = -temp_desire_l;
       }
 
-      DesireR = (uart1_recv_buf[9]-'0')*10000 + (uart1_recv_buf[10]-'0')*1000 +
+      temp_desire_r = (uart1_recv_buf[9]-'0')*10000 + (uart1_recv_buf[10]-'0')*1000 +
         (uart1_recv_buf[11]-'0')*100 + (uart1_recv_buf[12]-'0')*10 + (uart1_recv_buf[13]-'0');
       if (uart1_recv_buf[8] == '-') {
-        DesireR = -DesireR;
+        temp_desire_r = -temp_desire_r;
       }
+      DesireL = temp_desire_l;
+      DesireR = temp_desire_r;
     }
   }
 }
 
+// #+00001,+00001\n
 void USART1_ReportEncoder(s16 l, s16 r) {
   u8 cnt = 0;
   u8 send_cnt = 15;
@@ -94,9 +95,10 @@ void USART1_ReportEncoder(s16 l, s16 r) {
   }
 }
 
+// #+01234\n
 void USART1_ReportBattery(int voltage) {
   u8 cnt = 0;
-  u8 send_cnt = 7;
+  u8 send_cnt = 8;
 
   sprintf(uart1_send_buf, "#%+06d\n", voltage);
   while (cnt < send_cnt) {

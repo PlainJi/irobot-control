@@ -18,5 +18,5 @@ void pid_velocity_weizhi(void);
 void pid_velocity_zengliang(void);
 void Set_Pwm(void);
 void readEncoder(void);
-void Report(void);
+extern void Report(void);
 #endif

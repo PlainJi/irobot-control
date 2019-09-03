@@ -1,8 +1,10 @@
 #include "main.h"
 
+int led_freq=1;
+char report_flag = 0;
 int MotoL=0, MotoR=0;				//电机PWM变量
 int Encoder_Left,Encoder_Right;		//左右编码器的脉冲计数
-float DesireL= 0, DesireR = 0;		//期望的脉冲计数
+float DesireL = 0, DesireR = 0;		//期望的脉冲计数
 char Stop = 0;						//启动/停止
 int Temperature;					//显示温度
 int Voltage;						//电池电压采样相关的变量
@@ -35,6 +37,9 @@ int main(void)
 	
 	while(1) {
 		//DataScope();
-		delay_ms(20);
+		if(report_flag) {
+			Report();
+			report_flag = 0;
+		}
 	}
 }
